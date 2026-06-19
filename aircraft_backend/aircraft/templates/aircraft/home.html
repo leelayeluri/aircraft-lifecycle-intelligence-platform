@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coral Comp Aircraft Intelligence</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: white;
+            background: #020617;
+            overflow-x: hidden;
+        }
+
+        .map-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background:
+                linear-gradient(rgba(0, 212, 255, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.06) 1px, transparent 1px),
+                radial-gradient(circle at 20% 25%, rgba(0, 212, 255, 0.22), transparent 28%),
+                radial-gradient(circle at 80% 70%, rgba(0, 119, 182, 0.28), transparent 30%),
+                linear-gradient(135deg, #020617, #07111f, #0b2d4d);
+            background-size: 55px 55px, 55px 55px, auto, auto, auto;
+        }
+
+        .world-map {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.25;
+            background-image: url("https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg");
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(1) contrast(1.2) brightness(0.65);
+        }
+
+        .route {
+            position: fixed;
+            width: 220px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            z-index: -1;
+            opacity: 0.7;
+            animation: routePulse 3s infinite ease-in-out;
+        }
+
+        .route.r1 { top: 32%; left: 18%; transform: rotate(18deg); }
+        .route.r2 { top: 45%; left: 48%; transform: rotate(-10deg); animation-delay: 1s; }
+        .route.r3 { top: 62%; left: 28%; transform: rotate(-22deg); animation-delay: 1.6s; }
+        .route.r4 { top: 24%; left: 63%; transform: rotate(25deg); animation-delay: 2s; }
+
+        @keyframes routePulse {
+            0%, 100% { opacity: 0.25; transform: scaleX(0.7); }
+            50% { opacity: 0.9; transform: scaleX(1.1); }
+        }
+
+        .flight-dot {
+            position: fixed;
+            z-index: -1;
+            font-size: 20px;
+            opacity: 0.8;
+            animation: fly 14s linear infinite;
+        }
+
+        .f1 { top: 30%; left: -5%; animation-delay: 0s; }
+        .f2 { top: 55%; left: -10%; animation-delay: 4s; }
+        .f3 { top: 20%; left: -8%; animation-delay: 8s; }
+
+        @keyframes fly {
+            from { transform: translateX(0) rotate(15deg); }
+            to { transform: translateX(115vw) rotate(15deg); }
+        }
+
+        .time-popup {
+            position: fixed;
+            top: 90px;
+            right: 70px;
+            padding: 14px 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(18px);
+            color: #d8f6ff;
+            display: none;
+            z-index: 10;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 70px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #00d4ff;
+        }
+
+        .nav-badge {
+            padding: 10px 18px;
+            border: 1px solid rgba(255,255,255,0.24);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(18px);
+            color: #d8f6ff;
+            font-size: 14px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 55px 20px 30px;
+        }
+
+        .hero h1 {
+            font-size: 54px;
+            max-width: 950px;
+            margin: auto;
+            line-height: 1.08;
+        }
+
+        .hero h1 span {
+            color: #00d4ff;
+        }
+
+        .hero p {
+            margin: 22px auto 0;
+            max-width: 720px;
+            font-size: 18px;
+            color: #c2d6e8;
+            line-height: 1.6;
+        }
+
+        .search-panel {
+            width: min(950px, 90%);
+            margin: 38px auto 30px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 28px;
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+        }
+
+        .search-row {
+            display: flex;
+            gap: 14px;
+        }
+
+        input {
+            flex: 1;
+            padding: 18px 22px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.24);
+            background: rgba(255,255,255,0.92);
+            color: #07111f;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 18px 32px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #00d4ff, #0077b6);
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0,212,255,0.35);
+        }
+
+        .chips {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .chip {
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #d8f6ff;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        .chip:hover {
+            background: rgba(0,212,255,0.18);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            width: min(1100px, 90%);
+            margin: 35px auto;
+        }
+
+        .stat-card {
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.22);
+            transition: 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            color: #00d4ff;
+            font-size: 28px;
+        }
+
+        .stat-card p {
+            margin: 8px 0 0;
+            color: #c2d6e8;
+            font-size: 14px;
+        }
+
+        .container {
+            width: min(1200px, 92%);
+            margin: 40px auto;
+        }
+
+        .results-header {
+            margin-bottom: 22px;
+        }
+
+        .results-header p {
+            color: #c2d6e8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            padding: 24px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.92);
+            color: #07111f;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.28);
+            transition: 0.25s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 26px;
+            font-weight: 900;
+            color: #003566;
+            margin-bottom: 18px;
+        }
+
+        .info-row {
+            margin: 11px 0;
+            line-height: 1.5;
+        }
+
+        .label {
+            display: block;
+            font-weight: 800;
+            color: #222;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            color: #444;
+            font-size: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #e7f8ff;
+            color: #0077b6;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .empty {
+            text-align: center;
+            color: #d2e4f4;
+            margin-top: 45px;
+            font-size: 18px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #9fb3c8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 800px) {
+            .navbar { padding: 20px; }
+            .hero h1 { font-size: 36px; }
+            .search-row { flex-direction: column; }
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body onclick="showLocationTime(event)">
+
+    <div class="map-bg"></div>
+    <div class="world-map"></div>
+
+    <div class="route r1"></div>
+    <div class="route r2"></div>
+    <div class="route r3"></div>
+    <div class="route r4"></div>
+
+    <div class="flight-dot f1">✈</div>
+    <div class="flight-dot f2">✈</div>
+    <div class="flight-dot f3">✈</div>
+
+    <div id="timePopup" class="time-popup"></div>
+
+    <nav class="navbar">
+        <div class="logo">Coral <span>Comp</span></div>
+        <div class="nav-badge">Aircraft Intelligence MVP</div>
+    </nav>
+
+    <section class="hero">
+        <h1>Unified <span>Aircraft Search</span> Intelligence Platform</h1>
+        <p>
+            Search FAA aircraft registry records using tail number, owner name,
+            manufacturer, or aircraft model through one clean interface.
+        </p>
+
+        <div class="search-panel" onclick="event.stopPropagation()">
+            <div class="search-row">
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Search: 1000A, Lewis, Cessna, Boeing, SR22T..."
+                    onkeydown="handleEnter(event)"
+                >
+                <button onclick="searchAircraft()">Search Aircraft</button>
+            </div>
+
+            <div class="chips">
+                <div class="chip" onclick="quickSearch('1000A')">Tail: 1000A</div>
+                <div class="chip" onclick="quickSearch('Lewis')">Owner: Lewis</div>
+                <div class="chip" onclick="quickSearch('Cessna')">Manufacturer: Cessna</div>
+                <div class="chip" onclick="quickSearch('Cirrus')">Manufacturer: Cirrus</div>
+                <div class="chip" onclick="quickSearch('SR22T')">Model: SR22T</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats" onclick="event.stopPropagation()">
+        <div class="stat-card">
+            <h2>FAA</h2>
+            <p>Public aircraft registry source</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>SQL</h2>
+            <p>PostgreSQL-backed storage layer</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>API</h2>
+            <p>Django REST Framework backend</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>1 Search</h2>
+            <p>Tail, owner, manufacturer, model</p>
+        </div>
+    </section>
+
+    <main class="container" onclick="event.stopPropagation()">
+        <div id="results">
+            <p class="empty">
+                Enter a search term above or click a quick search example.
+            </p>
+        </div>
+    </main>
+
+    <div class="footer">
+        Current MVP: Aircraft Registry Search · Future Roadmap: Live Tracking · Maintenance Insights · AI Search Assistant
+    </div>
+
+    <script>
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                searchAircraft();
+            }
+        }
+
+        function quickSearch(value) {
+            document.getElementById("searchInput").value = value;
+            searchAircraft();
+        }
+
+        async function searchAircraft() {
+            const query = document.getElementById("searchInput").value.trim();
+            const resultsDiv = document.getElementById("results");
+
+            if (!query) {
+                resultsDiv.innerHTML = `<p class="empty">Please enter a search value.</p>`;
+                return;
+            }
+
+            resultsDiv.innerHTML = `<p class="empty">Scanning aircraft registry records...</p>`;
+
+            try {
+                const response = await fetch(`/api/search/all/?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (!data.results || data.results.length === 0) {
+                    resultsDiv.innerHTML = `<p class="empty">No aircraft records found for "${query}".</p>`;
+                    return;
+                }
+
+                let html = `
+                    <div class="results-header">
+                        <h2>Results for "${data.query}"</h2>
+                        <p>${data.count} matching aircraft record(s) found · Search mode: ${data.search_type || "universal"}</p>
+                    </div>
+                    <div class="grid">
+                `;
+
+                data.results.forEach(item => {
+                    html += `
+                        <div class="card">
+                            <div class="tail">
+                                <span>${item.n_number || "N/A"}</span>
+                                <span>✈</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Owner</span>
+                                <span class="value">${item.owner_name || "Not Available"}</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Manufacturer</span>
+                                <span class="value">${item.aircraft_manufacturer || "Not Available"}</span>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="label">Aircraft Model</span>
+                                <span class="value">${item.aircraft_model || "Not Available"}</span>
+                            </div>
+
+                            <span class="badge">FAA Registry Record</span>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="empty">Unable to connect to aircraft search API.</p>`;
+            }
+        }
+
+        function showLocationTime(event) {
+            const popup = document.getElementById("timePopup");
+
+            const x = event.clientX;
+            const screenWidth = window.innerWidth;
+
+            const longitude = Math.round((x / screenWidth) * 360 - 180);
+            const offset = Math.round(longitude / 15);
+
+            const now = new Date();
+            const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+            const localTime = new Date(utc + offset * 3600000);
+
+            popup.style.display = "block";
+            popup.innerHTML = `
+                <strong>Estimated Local Time</strong><br>
+                Longitude: ${longitude}°<br>
+                UTC Offset: ${offset >= 0 ? "+" : ""}${offset}:00<br>
+                Time: ${localTime.toLocaleTimeString()}
+            `;
+        }
+    </script>
+
+</body>
+</html>

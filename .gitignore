@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# Django
+db.sqlite3
+*/db.sqlite3
+media/
+staticfiles/
+
+# Mac files
+.DS_Store
+
+# Large datasets
+*.csv
+*.zip
+*.xlsx
+*.dump
+
+# IDE
+.vscode/
+.idea/
