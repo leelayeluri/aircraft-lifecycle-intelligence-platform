@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class AircraftSearch(models.Model):
     n_number = models.CharField(max_length=20, primary_key=True)
     owner_name = models.TextField(null=True, blank=True)
@@ -7,5 +8,7 @@ class AircraftSearch(models.Model):
     aircraft_model = models.TextField(null=True, blank=True)
 
     class Meta:
-        managed = False
-        db_table = 'aircraft_search'
+        db_table = "aircraft_search"
+
+    def __str__(self):
+        return self.n_number

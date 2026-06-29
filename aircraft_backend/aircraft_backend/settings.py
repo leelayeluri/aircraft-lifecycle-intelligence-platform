@@ -79,8 +79,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'aircraft_lifecycle_db',
         'USER': 'postgres',
-        'PASSWORD': 'Ramesh@2005',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'Coralcomp123',
+        'HOST': 'aircraft-lifecycle-db.ctywxbwft0ln.ap-southeast-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

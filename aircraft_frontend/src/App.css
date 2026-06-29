@@ -1,0 +1,713 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background: #020817;
+  color: white;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(0, 217, 255, 0.18), transparent 35%),
+    radial-gradient(circle at 80% 28%, rgba(0, 119, 255, 0.16), transparent 32%),
+    radial-gradient(circle at 50% 85%, rgba(0, 255, 180, 0.08), transparent 38%),
+    linear-gradient(135deg, #03111f 0%, #06152a 45%, #020817 100%);
+}
+
+.gridOverlay {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 217, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.08) 1px, transparent 1px);
+  background-size: 82px 82px;
+  animation: gridMove 22s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes gridMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(82px); }
+}
+
+.glowOne,
+.glowTwo {
+  position: fixed;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glowOne {
+  top: 14%;
+  left: 6%;
+  background: rgba(0, 217, 255, 0.2);
+}
+
+.glowTwo {
+  right: 8%;
+  bottom: 10%;
+  background: rgba(0, 119, 255, 0.18);
+}
+
+.plane {
+  position: fixed;
+  z-index: 1;
+  color: rgba(230, 250, 255, 0.8);
+  font-size: 22px;
+  filter: drop-shadow(0 0 14px rgba(0, 217, 255, 0.9));
+  pointer-events: none;
+}
+
+.planeOne {
+  top: 22%;
+  left: -5%;
+  animation: flyOne 18s linear infinite;
+}
+
+.planeTwo {
+  top: 55%;
+  right: -5%;
+  animation: flyTwo 24s linear infinite;
+}
+
+.planeThree {
+  top: 78%;
+  left: -5%;
+  animation: flyThree 28s linear infinite;
+}
+
+@keyframes flyOne {
+  from { transform: translateX(0) rotate(12deg); }
+  to { transform: translateX(115vw) translateY(-80px) rotate(12deg); }
+}
+
+@keyframes flyTwo {
+  from { transform: translateX(0) rotate(200deg); }
+  to { transform: translateX(-115vw) translateY(70px) rotate(200deg); }
+}
+
+@keyframes flyThree {
+  from { transform: translateX(0) rotate(-4deg); }
+  to { transform: translateX(115vw) translateY(-35px) rotate(-4deg); }
+}
+
+.navbar,
+.hero,
+.stats,
+.resultsSection,
+.profileHero,
+.profileGrid {
+  position: relative;
+  z-index: 3;
+}
+
+.navbar {
+  padding: 28px 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}
+
+.logo span {
+  color: #00d9ff;
+}
+
+.navBadge,
+.backButton,
+.liveBadge {
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: rgba(150, 180, 205, 0.18);
+  border: 1px solid rgba(220, 245, 255, 0.25);
+  color: white;
+  font-weight: 800;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 14px 45px rgba(0, 0, 0, 0.28);
+}
+
+.backButton {
+  cursor: pointer;
+}
+
+.hero {
+  text-align: center;
+  padding: 85px 20px 60px;
+}
+
+.liveBadge {
+  width: fit-content;
+  margin: 0 auto 28px;
+}
+
+.liveBadge span {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: #00ff9d;
+  box-shadow: 0 0 16px #00ff9d;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.8); }
+}
+
+.hero h1 {
+  max-width: 1160px;
+  margin: auto;
+  font-size: clamp(48px, 6vw, 86px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -2px;
+  text-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.hero h1 span {
+  color: #00d9ff;
+}
+
+.hero p {
+  max-width: 860px;
+  margin: 28px auto 0;
+  color: #d8e8f4;
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+.searchPanel {
+  width: min(1060px, 90%);
+  margin: 55px auto 0;
+  padding: 28px;
+  border-radius: 32px;
+  background: linear-gradient(
+    135deg,
+    rgba(145, 170, 190, 0.32),
+    rgba(70, 95, 115, 0.25)
+  );
+  border: 1px solid rgba(220, 245, 255, 0.24);
+  backdrop-filter: blur(24px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 32px 100px rgba(0, 0, 0, 0.42);
+}
+
+.searchRow {
+  display: flex;
+  gap: 16px;
+}
+
+.searchRow input {
+  flex: 1;
+  padding: 24px 28px;
+  border-radius: 18px;
+  border: none;
+  outline: none;
+  color: #111827;
+  font-size: 17px;
+}
+
+.searchRow button {
+  padding: 22px 40px;
+  border-radius: 18px;
+  border: none;
+  background: linear-gradient(135deg, #00d9ff, #0077ff);
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 16px 45px rgba(0, 153, 255, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.searchRow button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 55px rgba(0, 153, 255, 0.52);
+}
+
+.chips {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.chips button {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.chips button:hover {
+  background: rgba(0, 217, 255, 0.2);
+  border-color: rgba(0, 217, 255, 0.5);
+}
+
+.stats {
+  width: min(1250px, 92%);
+  margin: 40px auto 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+}
+
+.stats article,
+.aircraftCard,
+.profileHero,
+.profileCard {
+  background: linear-gradient(
+    145deg,
+    rgba(145, 170, 190, 0.32),
+    rgba(70, 95, 115, 0.26)
+  );
+  border: 1px solid rgba(220, 245, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 22px 70px rgba(0, 0, 0, 0.28);
+}
+
+.stats article {
+  padding: 30px;
+}
+
+.stats h3 {
+  color: #00d9ff;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.stats p {
+  color: #d8e8f4;
+}
+
+.resultsSection {
+  width: min(1250px, 92%);
+  margin: 20px auto 90px;
+}
+
+.resultsSection h2 {
+  font-size: 34px;
+  margin-bottom: 28px;
+}
+
+.resultsSection h2 span {
+  color: #00d9ff;
+}
+
+.statusText {
+  color: #d8e8f4;
+  margin-bottom: 20px;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.aircraftCard {
+  padding: 30px;
+  min-height: 320px;
+  transition: 0.25s ease;
+}
+
+.aircraftCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0, 217, 255, 0.45);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTop h3 {
+  color: #00d9ff;
+  font-size: 36px;
+}
+
+.cardTop span {
+  font-size: 24px;
+}
+
+.infoBlock {
+  margin-top: 22px;
+}
+
+.infoBlock label {
+  display: block;
+  color: #b8d2e5;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.infoBlock p {
+  color: white;
+  font-size: 17px;
+}
+
+.detailsButton {
+  margin-top: 24px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(0, 217, 255, 0.18);
+  color: #dff8ff;
+  border: 1px solid rgba(0, 217, 255, 0.35);
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.15s;
+}
+
+.detailsButton:hover {
+  background: rgba(0, 217, 255, 0.32);
+  border-color: rgba(0, 217, 255, 0.65);
+  transform: translateY(-1px);
+}
+
+.profileHero {
+  width: min(1200px, 90%);
+  margin: 80px auto 40px;
+  padding: 60px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.eyebrow {
+  color: #00d9ff;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+
+.profileHero h1 {
+  font-size: clamp(70px, 9vw, 120px);
+  line-height: 1;
+}
+
+.profileHero p {
+  margin-top: 22px;
+  color: #d7e6f3;
+  line-height: 1.7;
+  font-size: 18px;
+}
+
+.statusCard {
+  min-width: 290px;
+  padding: 26px;
+  height: fit-content;
+  border-radius: 24px;
+  background: rgba(0, 217, 255, 0.12);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+}
+
+.statusCard span {
+  display: block;
+  color: #a9c6dc;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.statusCard strong {
+  font-size: 22px;
+}
+
+.profileGrid {
+  width: min(1200px, 90%);
+  margin: 0 auto 90px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.profileCard {
+  padding: 32px;
+}
+
+.profileCard.wide {
+  grid-column: span 2;
+}
+
+.profileCard h2 {
+  color: #00d9ff;
+  font-size: 28px;
+  margin-bottom: 22px;
+}
+
+.profileCard h3 {
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+.profileCard p {
+  color: #d7e6f3;
+  line-height: 1.7;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.detailGrid div,
+.miniList div {
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.detailGrid span,
+.miniList span {
+  display: block;
+  color: #a9c6dc;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.detailGrid strong,
+.miniList strong {
+  display: block;
+  color: white;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.miniList {
+  display: grid;
+  gap: 14px;
+}
+
+.timeline {
+  display: grid;
+  gap: 18px;
+}
+
+.timeline div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.timeline span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00d9ff;
+  box-shadow: 0 0 18px rgba(0, 217, 255, 0.8);
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 22px;
+  }
+
+  .stats,
+  .resultsGrid,
+  .profileGrid,
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .profileCard.wide {
+    grid-column: span 1;
+  }
+
+  .profileHero {
+    flex-direction: column;
+    padding: 35px;
+  }
+
+  .searchRow {
+    flex-direction: column;
+  }
+}
+/* ── Gauge Row ──────────────────────────────────────────────────── */
+.gaugeRow {
+  width: min(1250px, 92%);
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+  z-index: 3;
+}
+
+.gaugeCard {
+  padding: 24px 18px 16px;
+  border-radius: 24px;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(145,170,190,0.26), rgba(70,95,115,0.2));
+  border: 1px solid rgba(220,245,255,0.16);
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 16px 50px rgba(0,0,0,0.24);
+  transition: transform 0.22s, border-color 0.22s;
+}
+
+.gaugeCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 217, 255, 0.35);
+}
+
+.gaugeSub {
+  color: #a9c6dc;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* ── Stat Cards ─────────────────────────────────────────────────── */
+.statCard {
+  padding: 26px 24px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(145,170,190,0.28), rgba(70,95,115,0.22));
+  border: 1px solid rgba(220,245,255,0.18);
+  backdrop-filter: blur(20px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 18px 60px rgba(0,0,0,0.26);
+  transition: transform 0.22s, border-color 0.22s;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 217, 255, 0.35);
+}
+
+.statCardInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.statLabel {
+  color: #a9c6dc;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 5px;
+}
+
+.statSub {
+  color: #6a8fa8;
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+/* ── D3 Badge ───────────────────────────────────────────────────── */
+.d3Badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 217, 255, 0.15);
+  color: #00d9ff;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* ── Live block inside card ─────────────────────────────────────── */
+.liveBlock {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.liveBlock p {
+  color: #c0d8ea;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* ── Aircraft card plane icon ───────────────────────────────────── */
+.cardPlane {
+  font-size: 24px;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.8));
+  animation: bobPlane 3s ease-in-out infinite;
+}
+
+@keyframes bobPlane {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ── Back button hover ──────────────────────────────────────────── */
+.backButton:hover {
+  background: rgba(0, 217, 255, 0.18);
+  border-color: rgba(0, 217, 255, 0.45);
+}
+
+/* ── Responsive additions ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .gaugeRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .gaugeRow {
+    grid-template-columns: 1fr;
+  }
+}
